@@ -15,6 +15,7 @@ $('#load').slideUp(500,function(){
   $('body').css('overflow','auto')
 })
   })
+  
 })
  
 
@@ -50,11 +51,11 @@ allmeal=response.meals
 
 let search=document.getElementById('search').addEventListener('click',function(){
  let div=`
-   <div class="row  justify-content-around g-3">
-      <div class="col-5" id="input1">
+   <div class="row   justify-content-around g-3">
+      <div class=" col-12  col-md-5" id="input1">
         <input type="text" class="form-control " placeholder="Search By Name" aria-label="First name">
       </div>
-      <div class="col-5" id="input2">
+      <div class= " col-12  col-md-5" id="input2">
         <input type="text" class="form-control" placeholder="Search By Letter" aria-label="Last name">
       </div>
     </div>
@@ -78,37 +79,38 @@ input2.addEventListener('input',function(e){
 searchmealletter(e.target.value)
 })
 }
+let allsearch=[]
 async function searchmeal(nome){
   const api= await fetch(`https://www.themealdb.com/api/json/v1/1/search.php?s=${nome}`)
 let response=await api.json()
-displaysearch(response.meals)
+allsearch=response.meals
+
+displaysearch()
 
 
 }
 async function searchmealletter(nome){
   const api= await fetch(`https://www.themealdb.com/api/json/v1/1/search.php?f=${nome}`)
 let response=await api.json()
-
-displaysearch(response.meals)
-$("#load").fadeIn(300,function(){
-  $("#loader").slideDown(300)
-})
+allsearch=response.meals
+displaysearch()
 
 }
 
- function displaysearch(date){
+ function displaysearch(){
+ 
   let cartoon='' 
-  for( let i=0;i<25;i++)
+  for( let i=0;i<allsearch.length;i++)
        
     {  
          cartoon+=`
            
          
-         <div id="${date[i].idMeal}" class="col-12 mt-1 col-md-3 lo  rounded-4 ">
+         <div id="${allsearch[i].idMeal}" class="col-12 mt-1 col-md-3 lo  rounded-4 ">
          <div class="conterma p-1   w-100 rounded-4  overflow-hidden position-relative" >
-       <img src="${date[i].strMealThumb}" class="w-100 mb-1" alt="">
+       <img src="${allsearch[i].strMealThumb}" class="w-100 mb-1" alt="">
     <div class=" pt-1 content bg-light "> 
-       <h3 class=" h5 m-0 pt-2 mt-5 text text-black">${date[i].strMeal}</h3>
+       <h3 class=" h5 m-0 pt-2 mt-5 text text-black">${allsearch[i].strMeal}</h3>
         </div>
       </div>
     
@@ -118,11 +120,16 @@ $("#load").fadeIn(300,function(){
            
            `
    }
-   
+ 
+   $('#loader').fadeOut(1000,function(){
+    $('#load').slideUp(500,function(){
+      $('body').css('overflow','auto')
+    })
+      })
  
 document.getElementById('row-date').innerHTML=cartoon
 
-getids(date)
+getids(allsearch)
  }
  
 
@@ -200,8 +207,8 @@ carton+=`
     
   </ul>
 
-  <h3>tags :</h3>
-     <button class="btn btn-success m-2 text-light"><a href="${getId.strSource}"class='text-light text-decoration-none ' target="_blank">source</a></button> 
+  <h3 class='p-3'>tags :</h3>
+     <button class="btn btn-success p-1 m-2 text-light"><a href="${getId.strSource}"class='text-light text-decoration-none ' target="_blank">source</a></button> 
      <button class="btn btn-danger  text-light"><a href="${getId.  strYoutube}"class='text-light text-decoration-none ' target="_blank">Youtube</a></button> 
   
      </div>
@@ -308,6 +315,23 @@ displaydetailcatgory()
     })
 
   
+}
+function getdelsso(){
+  
+  let id =document.querySelectorAll('.content').forEach(id => {
+  id.addEventListener('click', async function(cat){
+    cat=id.querySelector( 'h3').getAttribute('id') ;
+    console.log(cat);
+  const api=await fetch(`https://www.themealdb.com/api/json/v1/1/search.php?s=${cat}`)
+  let response=await api.json()
+getids(response.meals[0].idMeal);
+  // displaydetailcatgory(response.meals)
+  
+  
+  })
+  })
+
+
 }
 function displaydatek(get){
   let cartoon=""
@@ -450,7 +474,7 @@ function darea(){
     <div class="conterma p-1  w-100 rounded-4  overflow-hidden position-relative" >
   <img src="${arre[i].strMealThumb}" class="w-100 mb-4 pb-3 " alt="">
   <div class="  mt-1 content bg-light "> 
-  <h3 class=" mt-2 pt-4  text-black">${arre[i].strMeal}</h3>
+  <h3 id='${arre[i].strMeal}'  class=" mt-2 pt-4  text-black">${arre[i].strMeal}</h3>
    </div>
   </div>
   
@@ -462,6 +486,7 @@ function darea(){
 }
 document.getElementById('row-date').innerHTML=cartn
 document.getElementById('row-search').innerHTML=''
+getdelsso()
 }
 let ingredients=[]
 async function Ingredients(){
