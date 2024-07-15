@@ -121,11 +121,7 @@ displaysearch()
            `
    }
  
-   $('#loader').fadeOut(1000,function(){
-    $('#load').slideUp(500,function(){
-      $('body').css('overflow','auto')
-    })
-      })
+   
  
 document.getElementById('row-date').innerHTML=cartoon
 
